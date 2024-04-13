@@ -84,9 +84,7 @@ function getFirstResolvedPromiseResult(promises) {
  * [promise3, promise4, promise6] => Promise rejected with 6
  */
 function getFirstPromiseResult(promises) {
-  return Promise.race(promises)
-    .then((result) => result)
-    .catch((result) => result);
+  return Promise.race(promises);
 }
 
 /**
@@ -116,8 +114,12 @@ function getAllOrNothing(promises) {
  * [Promise.resolve(1), Promise.resolve(2), Promise.resolve(3)] => Promise fulfilled with [1, 2, 3]
  * [Promise.resolve(1), Promise.reject(2), Promise.resolve(3)]  => Promise fulfilled with [1, null, 3]
  */
-function getAllResult(/* promises */) {
-  throw new Error('Not implemented');
+function getAllResult(promises) {
+  return Promise.allSettled(promises).then((values) =>
+    values.map((result) =>
+      result.status === 'fulfilled' ? result.value : null
+    )
+  );
 }
 
 /**
